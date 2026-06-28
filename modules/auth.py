@@ -6,28 +6,12 @@ from modules.db import get_user_by_username, verify_password
 def authenticate_user(username, password):
     """
     Authenticate a user using the SQLite database.
-
-    Parameters
-    ----------
-    username : str
-        Username entered in the login form.
-
-    password : str
-        Password entered in the login form.
-
-    Returns
-    -------
-    dict or None
-        Returns user information if login is successful.
-        Returns None if login fails.
     """
     user = get_user_by_username(username)
 
     if user is None:
         return None
 
-    # Optional but recommended:
-    # prevent inactive users from logging in.
     if "is_active" in user.keys() and user["is_active"] != 1:
         return None
 
@@ -45,8 +29,6 @@ def authenticate_user(username, password):
 def show_forgot_password_message():
     """
     Show a demo-friendly forgot-password message.
-
-    In this version, password reset is handled by the admin.
     """
     with st.expander("Forgot password?"):
         st.info(
