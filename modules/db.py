@@ -353,6 +353,45 @@ def deactivate_user(user_id):
 
     return user_deactivated
 
+def count_analysis_reports():
+    """
+    Count all saved analysis reports.
+
+    This is used in the admin dashboard metric.
+    """
+    conn = sqlite3.connect("database/chambercal.db")
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("SELECT COUNT(*) FROM analysis_reports")
+        report_count = cursor.fetchone()[0]
+    except sqlite3.OperationalError:
+        report_count = 0
+
+    conn.close()
+
+    return report_count
+
+
+def count_chambers():
+    """
+    Count all chambers in the database.
+
+    This avoids hardcoding the chamber count in the admin dashboard.
+    """
+    conn = sqlite3.connect("database/chambercal.db")
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("SELECT COUNT(*) FROM chambers")
+        chamber_count = cursor.fetchone()[0]
+    except sqlite3.OperationalError:
+        chamber_count = 0
+
+    conn.close()
+
+    return chamber_count
+
 def log_activity(
     category,
     action,

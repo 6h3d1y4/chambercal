@@ -7,6 +7,8 @@ from modules.sql_viewer import show_sql_viewer_tab
 
 from modules.db import (
     count_active_users,
+    count_analysis_reports,
+    count_chambers,
     get_all_users,
     create_user,
     update_user_active_status,
@@ -63,8 +65,8 @@ def show_admin_metrics():
     col1, col2, col3 = st.columns(3)
 
     col1.metric("Active users", count_active_users())
-    col2.metric("Uploaded tests", 0)
-    col3.metric("Chambers", 2)
+    col2.metric("Analysis reports", count_analysis_reports())
+    col3.metric("Chambers", count_chambers())
 
 def show_admin_home_tab():
     """
