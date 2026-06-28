@@ -33,5 +33,4 @@ def show_forgot_password_message():
     with st.expander("Forgot password?"):
         st.info(
             "Please contact an administrator to reset your password. "
-            "For this demo version, password reset is handled by the admin."
         )
