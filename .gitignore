@@ -1,19 +1,9 @@
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
+# Database
+database/*.db
+database/*.db-journal
+database/*.sqlite
+database/*.sqlite3
 
-# Virtual environments
-.venv/
-venv/
-env/
-
-# IDE files
-.idea/
-
-# Streamlit secrets
-.streamlit/secrets.toml
-
-# OS files
-.DS_Store
-Thumbs.db
+# Allow demo SQLite database for Streamlit Community Cloud demo
+!database/chambercal.db
+!database/.gitkeep

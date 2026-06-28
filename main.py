@@ -5,8 +5,7 @@ import streamlit as st
 
 from modules.auth import authenticate_user
 from modules.dashboard import show_dashboard
-from modules.db import initialize_database, create_default_users
-
+from modules.db import setup_database
 
 # ---------------------------------------------------------
 # Page configuration
@@ -18,8 +17,7 @@ st.set_page_config(
     layout="wide",
 )
 
-initialize_database()
-create_default_users()
+setup_database()
 
 # ---------------------------------------------------------
 # File paths

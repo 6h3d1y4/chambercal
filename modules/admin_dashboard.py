@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 
 from modules.audit import show_audit_tab
+from modules.analysis_settings import show_analysis_settings_tab
+from modules.sql_viewer import show_sql_viewer_tab
 
 from modules.db import (
     count_active_users,
@@ -193,16 +195,34 @@ def show_registered_users_table():
 def show_admin_dashboard():
     """
     Display the admin area with top-level tabs.
+
+    The admin area currently contains:
+
+    1. Admin Dashboard
+       User management and overview metrics.
+
+    2. Analysis Settings
+       Chamber setup, calculation constants, trim settings,
+       and quality thresholds.
+
+    3. Audit
+       Activity logs grouped by category.
     """
-    admin_dashboard_tab, audit_tab = st.tabs(
-        ["Admin Dashboard", "Audit"]
+    admin_dashboard_tab, analysis_settings_tab, audit_tab, sql_viewer_tab = st.tabs(
+        ["Admin Dashboard", "Analysis Settings", "Audit", "SQL Viewer"]
     )
 
     with admin_dashboard_tab:
         show_admin_home_tab()
 
+    with analysis_settings_tab:
+        show_analysis_settings_tab()
+
     with audit_tab:
         show_audit_tab()
+
+    with sql_viewer_tab:
+        show_sql_viewer_tab()
 
 
 
