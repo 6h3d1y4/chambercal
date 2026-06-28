@@ -1536,3 +1536,35 @@ def get_analysis_reports_for_user(user_id, from_date=None, to_date=None, chamber
     conn.close()
 
     return reports
+
+def update_user_password(user_id, new_password):
+    """
+    Update a user's password.
+
+    The password is hashed before saving.
+    This is used by admins to reset a user's temporary password.
+    """
+    conn = sqlite3.connect("database/chambercal.db")
+    cursor = conn.cursor()
+
+    new_password_hash = hash_password(new_password)
+
+    cursor.execute(
+        """
+        UPDATE users
+        SET password_hash = ?
+        WHERE user_id = ?
+        """,
+        (
+            new_password_hash,
+            user_id,
+        ),
+    )
+
+    conn.commit()
+
+    updated = cursor.rowcount > 0
+
+    conn.close()
+
+    return updated

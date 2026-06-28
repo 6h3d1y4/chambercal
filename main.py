@@ -3,7 +3,7 @@ import base64
 
 import streamlit as st
 
-from modules.auth import authenticate_user
+from modules.auth import authenticate_user, show_forgot_password_message
 from modules.dashboard import show_dashboard
 from modules.db import setup_database
 
@@ -157,8 +157,8 @@ st.markdown(
 
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
-if "user_name" not in st.session_state:
-    st.session_state.user_name = None
+if "username" not in st.session_state:
+    st.session_state.username = None
 if "name" not in st.session_state:
     st.session_state.name = None
 if "role" not in st.session_state:
@@ -234,4 +234,4 @@ with right_col:
                 st.rerun()
             else:
                 st.error("Invalid username or password.")
-        st.caption("Forgot password?")
+        show_forgot_password_message()

@@ -12,6 +12,7 @@ from modules.db import (
     get_all_users,
     create_user,
     update_user_active_status,
+    update_user_password,
     log_activity,
 )
 
@@ -74,10 +75,11 @@ def show_admin_home_tab():
     """
 
     st.subheader("Admin Dashboard")
-    st.write("Here the admin will later manage users and view all test results.")
+    st.write("Manage users, review system status, and access admin tools.")
 
     show_admin_metrics()
     show_registered_users_table()
+    show_reset_password_form()
     show_create_user_form()
 
 def show_registered_users_table():
@@ -193,6 +195,93 @@ def show_registered_users_table():
 
     else:
         st.info("No users found.")
+
+def show_reset_password_form():
+    """
+    Display an admin-only form for resetting a user's password.
+
+    This is the demo-friendly replacement for a full email-based
+    forgot-password workflow.
+    """
+    st.divider()
+
+    st.subheader("Reset User Password")
+
+    users = get_all_users()
+
+    if not users:
+        st.info("No users available.")
+        return
+
+    user_options = {}
+
+    for user in users:
+        label = (
+            f"{user['username']} | {user['full_name']} | "
+            f"{user['role']}"
+        )
+
+        user_options[label] = user["user_id"]
+
+    with st.form("reset_user_password_form"):
+        selected_user_label = st.selectbox(
+            "Select user",
+            options=list(user_options.keys()),
+        )
+
+        new_password = st.text_input(
+            "New temporary password",
+            type="password",
+        )
+
+        confirm_password = st.text_input(
+            "Confirm temporary password",
+            type="password",
+        )
+
+        submitted = st.form_submit_button("Reset Password")
+
+        if submitted:
+            if not new_password or not confirm_password:
+                st.error("Please enter and confirm the new password.")
+
+            elif new_password != confirm_password:
+                st.error("The two password fields do not match.")
+
+            elif len(new_password) < 6:
+                st.error("Temporary password should be at least 6 characters.")
+
+            else:
+                selected_user_id = user_options[selected_user_label]
+
+                updated = update_user_password(
+                    user_id=selected_user_id,
+                    new_password=new_password,
+                )
+
+                if updated:
+                    selected_username = selected_user_label.split(" | ")[0]
+
+                    log_activity(
+                        category="admin_user_management",
+                        action="user_password_reset",
+                        actor_user_id=st.session_state.user_id,
+                        actor_username=st.session_state.username,
+                        target_type="user",
+                        target_id=selected_user_id,
+                        target_name=selected_username,
+                        details=(
+                            f"Reset password for user '{selected_username}'. "
+                            "The password value was not stored in the audit log."
+                        ),
+                    )
+
+                    st.success(
+                        f"Password for '{selected_username}' was reset successfully."
+                    )
+
+                else:
+                    st.error("Password reset failed.")
 
 def show_admin_dashboard():
     """
