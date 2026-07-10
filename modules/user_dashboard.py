@@ -105,17 +105,25 @@ def style_quality_cells(value):
 
 
 def detect_chamber_from_filename(file_name):
+    """
+    Detect the chamber from the number directly after '#'.
+
+    Example:
+        260205_propane_5h#1_m2_extracted.txt
+        -> chamber code: m1
+
+    The later '_m2' part is ignored.
+    """
     if not file_name:
         return None
 
-    file_name = str(file_name).lower()
-
-    match = re.search(r"#(\d+)", file_name)
+    match = re.search(r"#(\d+)", str(file_name))
 
     if not match:
         return None
 
-    chamber_number = match.group(1)
+    chamber_number = int(match.group(1))
+    expected_chamber_code = f"m{chamber_number}"
 
     chambers = get_all_chambers()
 
@@ -124,7 +132,7 @@ def detect_chamber_from_filename(file_name):
             chamber["chamber_code"]
         ).strip().lower()
 
-        if chamber_code == chamber_number:
+        if chamber_code == expected_chamber_code:
             return chamber
 
     return None
