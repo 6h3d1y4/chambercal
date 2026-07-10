@@ -105,36 +105,26 @@ def style_quality_cells(value):
 
 
 def detect_chamber_from_filename(file_name):
-    """
-    Try to detect the chamber code from the uploaded filename.
-
-    Example filename:
-        200930_propane_10h#1_m2_extracted.txt
-
-    In this case:
-        m2 should be detected as the chamber code.
-
-    Returns
-    -------
-    dict or None
-        Returns the matching chamber row if found.
-        Returns None if no chamber code is detected.
-    """
     if not file_name:
         return None
 
-    file_name_lower = file_name.lower()
+    file_name = str(file_name).lower()
+
+    match = re.search(r"#(\d+)", file_name)
+
+    if not match:
+        return None
+
+    chamber_number = match.group(1)
 
     chambers = get_all_chambers()
 
     for chamber in chambers:
-        chamber_code = str(chamber["chamber_code"]).lower()
+        chamber_code = str(
+            chamber["chamber_code"]
+        ).strip().lower()
 
-        # This pattern looks for chamber codes such as m1 or m2
-        # surrounded by separators like _, -, #, or .
-        pattern = rf"(^|[_#\-.]){re.escape(chamber_code)}([_#\-.]|$)"
-
-        if re.search(pattern, file_name_lower):
+        if chamber_code == chamber_number:
             return chamber
 
     return None
