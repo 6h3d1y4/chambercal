@@ -199,7 +199,7 @@ def run_propane_analysis(
     if analysed_duration_min <= 0:
         raise ValueError("Analysed duration must be greater than zero.")
 
-    burning_rate_g_min = propane_burned_g / analysed_duration_min
+    burning_rate_g_min = propane_burned_g / total_duration_min
 
     propane_molar_mass = get_setting_value(
         settings_dict,
@@ -231,15 +231,23 @@ def run_propane_analysis(
         0.6,
     )
 
-    vo2_soll_l = (
+vo2_soll_l = (
+    (
         propane_burned_g
-        / propane_molar_mass
-        * o2_factor
-        * molar_volume
+        * analysed_duration_min
+        / total_duration_min
     )
+    / propane_molar_mass
+    * o2_factor
+    * molar_volume
+)
 
     vco2_soll_l = (
+    (
         propane_burned_g
+        * analysed_duration_min
+        / total_duration_min
+    )
         / propane_molar_mass
         * co2_factor
         * molar_volume
