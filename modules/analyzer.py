@@ -231,7 +231,7 @@ def run_propane_analysis(
         0.6,
     )
 
-vo2_soll_l = (
+    vo2_soll_l = (
     (
         propane_burned_g
         * analysed_duration_min
